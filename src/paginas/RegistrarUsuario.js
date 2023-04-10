@@ -286,7 +286,7 @@ verificacion  de errores  */
       setErrorLugar(true);
       setMensajeErrorLugar('La cantidad máxima es de 10 letras');
     }
-  }/*
+  }
   const comprobarTamCantidadMes=(compCantMes)=>{
     if(compCantMes.length>2&&compCantMes.length<51){
       tamCanMes=false;
@@ -297,7 +297,7 @@ verificacion  de errores  */
       setErrorCantidadMeses(true);
       setMensajeErrorCantidadMeses('La cantidad mínima es de tres letras y la máxima es de 50 letras');
     }
-  }*/
+  }
   //verificar todos los campos
   const comprobarCampos=()=>{
     //console.log(ci+'\n'+nombre+'\n'+apellido+'\n'+correo+'\n'+celular+'\n'+lugar+'\n'+cantidadMeses);
@@ -326,9 +326,9 @@ verificacion  de errores  */
       comprobarTamLugar(lugar);
     }
     onValidateCantidadMeses(cantidadMeses);
-    /*if(errorCantidadMeses2===false){
+    if(errorCantidadMeses2===false){
       comprobarTamCantidadMes(cantidadMeses);
-    }*/
+    }
     return tamCi||tamNombre||tamApellido||tamCorreo||tamCelular||tamLugar||tamCanMes;
   }
   //registra cliente/ redireccionar
