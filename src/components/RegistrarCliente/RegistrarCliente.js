@@ -1,17 +1,17 @@
 import React,{useState} from 'react'
-import Entrada from '../componentes/Entrada';
-import '../estilos/RegistrarUsuario.css';
+import Entrada from './Entrada/Entrada';
+import './RegistrarCliente.css';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
-//import { Modal,TextField,Button, makeStyles } from '@material-ui/core';
-//import { modalStyles } from '@material-ui/core';
-
-
+import { useHistory } from 'react-router-dom';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import FormInput from './InputFormAgregarVehiculo/FormInput';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 const conexionCliente='http://127.0.0.1:8000/api/cliente';
-const RegistrarUsuario = () => {
+const RegistrarCliente = () => {
   //constante para navegar
-  const navigate=useNavigate();
+  const navigate=useHistory();
   //guardar estado de inputs 
   const [ci,setCi]=useState('');
   const [nombre,setNombre]=useState('');
@@ -45,6 +45,7 @@ verificacion  de errores  */
   var errorCelular2=false;
   var errorLugar2=false;
   var errorCantidadMeses2=false;
+
   //tamaños de los inputs variables
   let tamCi=false;
   let tamNombre=false;
@@ -99,16 +100,16 @@ verificacion  de errores  */
   const manejarCantidadMeses=e=>{
     setCantidadMeses(e.target.value);
     onValidateCantidadMeses(e.target.value);
-    /*if(errorCantidadMeses2===false&&tamCanMes===true){
+    if(errorCantidadMeses2===false&&tamCanMes===true){
       comprobarTamCantidadMes(e.target.value);
-    }*/
+    }
   }
   //formatos para inputs
   const regexName = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$/;
   const regexEmail = /^(\w+[/./-]?){1,}@[a-z]+[/.]\w{2,}$/;
   const regexNumber = /^[0-9]+$/;
   const regexAll = /^[0-9A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$/;
-  const regexMonth= /^[1-9]+$/;
+  const regexMonth= /^[0-9]+$/;
   const regexCel = /^[0-9]+$/;
   //validaciones textos
   const onValidateCI=(ciCapturado)=>{
@@ -288,16 +289,21 @@ verificacion  de errores  */
     }
   }
   const comprobarTamCantidadMes=(compCantMes)=>{
-    if(compCantMes.length>2&&compCantMes.length<51){
+    if(compCantMes==='1'||compCantMes==='2'||compCantMes==='3'||compCantMes==='4'||
+    compCantMes==='5'||compCantMes==='6'||compCantMes==='7'||compCantMes==='8'||
+    compCantMes==='9'||compCantMes==='10'||compCantMes==='11'||compCantMes==='12'){
       tamCanMes=false;
       setErrorCantidadMeses(false);
       setMensajeErrorCantidadMeses(null);
     }else{
       tamCanMes=true;
       setErrorCantidadMeses(true);
-      setMensajeErrorCantidadMeses('La cantidad mínima es de tres letras y la máxima es de 50 letras');
+      setMensajeErrorCantidadMeses('El rango aceptado es de 1 al 12');
     }
   }
+  let listaAutoEstaVacio=false;
+  const [listaAuto,setListaAuto]=useState(false);
+  const [mensajeListaAuto,setMensajeListaAuto]=useState('');
   //verificar todos los campos
   const comprobarCampos=()=>{
     //console.log(ci+'\n'+nombre+'\n'+apellido+'\n'+correo+'\n'+celular+'\n'+lugar+'\n'+cantidadMeses);
@@ -329,7 +335,12 @@ verificacion  de errores  */
     if(errorCantidadMeses2===false){
       comprobarTamCantidadMes(cantidadMeses);
     }
-    return tamCi||tamNombre||tamApellido||tamCorreo||tamCelular||tamLugar||tamCanMes;
+    if(data.length===0){
+      listaAutoEstaVacio=true;
+      setListaAuto(true)
+      setMensajeListaAuto('Debe agregar al menos un auto')
+    }
+    return tamCi||tamNombre||tamApellido||tamCorreo||tamCelular||tamLugar||tamCanMes||listaAutoEstaVacio;
   }
   //registra cliente/ redireccionar
   const registrarCliente=async(e)=>{
@@ -343,7 +354,8 @@ verificacion  de errores  */
       celular:celular,
       cantidad_meses:cantidadMeses});
       //redireccion
-      navigate('/');
+      navigate.push('/Home');
+      window.location.reload();
     }
   }
   //cancelar con sweet alert
@@ -358,9 +370,121 @@ verificacion  de errores  */
       
     }).then(response=>{
       if(response.isConfirmed){
-        navigate('/');
+        navigate.push('/Home');
+        window.location.reload();
       }
     })
+  }
+  //añadir auto
+  const dataAutos=[];
+  const [data, setData]=useState(dataAutos);
+  const [values, setValues] = useState({
+    id:'',
+    matricula:"",
+    tipo:"",
+    marca:"",
+    soat:"",
+  });
+
+  const inputs = [
+    {
+    id:1,
+    name:"matricula",
+    type:"text",
+    placeholder:"Escriba la matricula del vehículo",
+    errorMessage:"Escribir números, letras de 6-8 caracteres y sin caracteres especiales!",
+    label:"Matricula",
+    pattern: "^[A-Z0-9]{6,8}",
+    required: true
+  },
+
+  {
+    id:2,
+    name:"tipo",
+    type:"text",
+    placeholder:"Selecione tipo de vehiculo",
+    errorMessage:"Debe seleccionar un tipo de vehículo",
+    label:"Tipo de vehículo",
+    pattern: "^[A-Za-z0-9]{4,20}",
+    required: true
+  },
+  {
+    id:3,
+    name:"marca",
+    type:"text",
+    placeholder:"Escriba la marca del vehículo",
+    errorMessage:"Espacio de llenado obligatorio",
+    label:"Marca",
+    pattern: "^[A-Za-z]{3,20}",
+    required: true
+  },
+  {
+    id:4,
+    name:"soat",
+    type:"text",
+    placeholder:"Escriba número de contacto",
+    errorMessage:"Espacio de llenado obligatorio",
+    label:"SOAT",
+    pattern: "^[0-9]{7,8}",
+    required: true
+  }
+]
+
+  const seleccionarAuto=(e,elemento, caso)=>{
+    e.preventDefault();
+    setValues(elemento);
+    (caso==='Editar')?setModalEditar(true):setModalEliminar(true)
+  }
+
+  const onChange = (e)=>{
+    setValues({ ...values, [e.target.name]: e.target.value });
+  }
+  const [stateInsertar,setStateInsertar]= useState(false);
+  const [modalEditar, setModalEditar]=useState(false);
+  const [modalEliminar, setModalEliminar] = useState(false);
+
+  const abrirModal=(e)=>{
+    e.preventDefault();
+    setStateInsertar(!stateInsertar);
+  }
+  const insertarVehiculo=(e)=>{
+    e.preventDefault();
+    listaAutoEstaVacio=false;
+      setListaAuto(false)
+      setMensajeListaAuto(null)
+    let valorInsertar=values;
+    var dataNueva = data;
+    valorInsertar.id=valorInsertar.matricula;
+    dataNueva.push(valorInsertar);
+    setData(dataNueva);
+    setStateInsertar(!stateInsertar);
+    let valoresCero={
+      id:'',
+      matricula:"",
+      tipo:"",
+      marca:"",
+      soat:"",
+    };
+    setValues(valoresCero)
+    
+  }
+  const editar=()=>{
+    var dataNueva=data;
+    dataNueva.map(auto=>{
+      if(auto.id===values.id){
+        auto.matricula=values.matricula;
+        auto.tipo=values.tipo;
+        auto.marca=values.marca;
+        auto.soat=values.soat;
+      }
+    });
+    setData(dataNueva);
+    setModalEditar(false);
+  }
+  const eliminar=(e)=>{
+    
+    setData(data.filter(auto=>auto.id!==values.id));
+    setModalEliminar(!modalEliminar);
   }
   //html
   return (
@@ -451,8 +575,9 @@ verificacion  de errores  */
     <div className='col'>
     <label className='tit'> <b>Registro vehiculos del cliente</b></label> <br/>
     <div className='botonAgregarVehiculo'>
-    <button className='agregarVehiculo' >Añadir Vehiculo</button>
+    <button className='agregarVehiculo' onClick={(e)=>abrirModal(e)}>Añadir Vehiculo</button>
     </div>
+    
     <table className='table table-bordered'>
       <thead>
         <tr>
@@ -461,7 +586,20 @@ verificacion  de errores  */
           <th>Acciones</th>
         </tr>
       </thead>
+      <tbody>
+        {data.map(elemento=>(
+          <tr>
+            <td>{elemento.marca}</td>
+            <td>{elemento.matricula}</td>
+            <td><button className="btn btn-warning" onClick={(e)=>seleccionarAuto(e,elemento, 'Editar')}><i className="bi bi-pencil-fill"></i></button> {"   "} 
+              <button className="btn btn-danger" onClick={(e)=>seleccionarAuto(e,elemento, 'Eliminar')}><i className="bi bi-trash-fill"></i></button></td>
+          </tr>
+        ))}
+      </tbody>
     </table>
+    { listaAuto &&<div className='alert alert-danger p-1' >
+        {mensajeListaAuto}
+       </div>}
     </div>
     </div>
     </form>
@@ -471,12 +609,90 @@ verificacion  de errores  */
       <button className='can' onClick={(e)=>cancelarRegistroCliente(e)}>Cancelar</button>
       </div>
     </div>
-    <footer>
-      <div>
-     <p id='cont'>Contactos</p>
-     </div>
-    </footer></div>
+    <div className='footerReg'><p id='cont'>Contactos</p></div>
+    <Modal isOpen={stateInsertar} >
+        <div className='headerModal'>
+        <ModalHeader>
+          <p  className='tituloModal'>Registro de vehículos</p>
+        </ModalHeader>
+        </div>
+        <form>
+        <ModalBody>
+        
+          {inputs.map((input) => (
+            <FormInput key={input.id} 
+            {...input} value={values[input.name]} 
+            onChange={onChange} />
+          ))}
+          
+        </ModalBody>
+        <div className='footerModal'>
+        <ModalFooter>
+          <div className='botonesModalAlinear'>
+            <Button onClick={insertarVehiculo} style={{
+              ...StyleSheet.buttonModal,
+              backgroundColor:"#00B9BC"
+            }}>Registrar</Button>
+            </div>
+            <Button onClick={
+              ()=>setStateInsertar(!stateInsertar)} style={{
+              ...StyleSheet.buttonModal,
+              backgroundColor:"#F46D21",
+            }}>Cancelar</Button>
+        </ModalFooter>
+        </div>
+        </form>
+      </Modal>
+      <Modal isOpen={modalEditar} >
+        <div className='headerModal'>
+        <ModalHeader>
+          <p  className='tituloModal'>Editar Vehículo</p>
+        </ModalHeader>
+        </div>
+        <form>
+        <ModalBody>
+        
+          {inputs.map((input) => (
+            <FormInput key={input.id} 
+            {...input} value={values[input.name]} 
+            onChange={onChange} />
+          ))}
+          
+        </ModalBody>
+        <div className='footerModal'>
+        <ModalFooter>
+          <div className='botonesModalAlinear'>
+            <Button onClick={editar} style={{
+              ...StyleSheet.buttonModal,
+              backgroundColor:"#00B9BC"
+            }}>Registrar</Button>
+            </div>
+            <Button onClick={
+              ()=>setModalEditar(!modalEditar)} style={{
+              ...StyleSheet.buttonModal,
+              backgroundColor:"#F46D21",
+            }}>Cancelar</Button>
+        </ModalFooter>
+        </div>
+        </form>
+      </Modal>
+      <Modal isOpen={modalEliminar}>
+        <ModalBody>
+        ¿Estás Seguro que deseas eliminar el auto?
+        </ModalBody>
+        <ModalFooter>
+          <button className="btn btn-danger" onClick={eliminar}>
+            Sí
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={()=>setModalEliminar(!modalEliminar)}
+          >
+            No
+          </button>
+        </ModalFooter>
+      </Modal>
+    </div>
   )
 }
-
-export default RegistrarUsuario;
+export default RegistrarCliente;

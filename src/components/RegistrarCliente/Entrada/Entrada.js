@@ -1,6 +1,6 @@
 import React from 'react'
-import '../estilos/Entrada.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import './Entrada.css'
+//import 'bootstrap/dist/css/bootstrap.min.css'
 
 const Entrada = (props) => {
   return (

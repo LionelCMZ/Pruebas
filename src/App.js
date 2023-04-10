@@ -1,27 +1,20 @@
 
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Layout from './paginas/Layout';
-import RegistrarUsuario from './paginas/RegistrarUsuario';
+//import FotoGuardia from './components/FotoGuardia/FotoGuardia';
+
+import Redipath from './Routes/Redipath';
 
 function App() {
-  return(
+  return (
     <div className="App">
-      
-      <BrowserRouter>
-         <Routes>
-          <Route path='/' element={<Layout/>}></Route>
-          <Route path='/registrarUsuario' element={<RegistrarUsuario/>}></Route>
-        </Routes>
-      </BrowserRouter>
-      
+      {/* <FotoGuardia/> */}
+
+    <Redipath/>
+
+    
     </div>
   );
-  /*<Routes>
-        <Route path='/' element={<Layout/>}>
-          <Route path='RegistrarUsuario' element={<RegistrarUsuario/>}/>
-        </Route>
-      </Routes>*/ 
-}
+};
 
 export default App;
+

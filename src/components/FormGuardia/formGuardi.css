@@ -1,0 +1,43 @@
+
+.titulo{
+    padding-top: 1%;
+    text-align: center;
+}
+
+.hw{ 
+    width: 20%;
+    padding: 2% 2% 2% 10% ;
+   
+ 
+}
+.hw2{
+    width: 20%;
+    padding: 2% 15% 2% 2% ;
+}
+
+.btn{
+   margin: 5px;
+   text-align: center;
+}
+
+.exito{
+    color: blue;
+}
+
+.error{
+    color: red;
+}
+
+#cont{
+    background-color: #004854;
+    color: white;
+    text-align: center;
+    padding-top: px;
+  }
+  .footerReg{
+    background-color: #004854;
+    margin-top: 2rem;
+  }
+
+
+
