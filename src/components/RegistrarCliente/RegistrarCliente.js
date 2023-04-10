@@ -470,14 +470,23 @@ verificacion  de errores  */
   }
   const editar=()=>{
     var dataNueva=data;
-    dataNueva.map(auto=>{
+    /*dataNueva.map(auto=>{
       if(auto.id===values.id){
         auto.matricula=values.matricula;
         auto.tipo=values.tipo;
         auto.marca=values.marca;
         auto.soat=values.soat;
       }
-    });
+    });*/
+    for(let i=0;i<dataNueva.length;i++){
+      let auto=data[i];
+      if(auto.id===values.id){
+        auto.matricula=values.matricula;
+        auto.tipo=values.tipo;
+        auto.marca=values.marca;
+        auto.soat=values.soat;
+      }
+    }
     setData(dataNueva);
     setModalEditar(false);
   }
